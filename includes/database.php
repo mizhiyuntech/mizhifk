@@ -61,18 +61,55 @@ class Database {
         foreach (array_keys($data) as $key) {
             $set[] = "{$key} = :{$key}";
         }
-        $sql = "UPDATE {$table} SET " . implode(', ', $set) . " WHERE {$where}";
-        return $this->query($sql, array_merge($data, $whereParams));
+        
+        // 转换WHERE条件中的位置参数为命名参数
+        $whereNamedParams = [];
+        $paramIndex = 0;
+        $whereConverted = preg_replace_callback('/\?/', function() use (&$paramIndex, $whereParams, &$whereNamedParams) {
+            $paramName = 'where_param_' . $paramIndex;
+            if (isset($whereParams[$paramIndex])) {
+                $whereNamedParams[$paramName] = $whereParams[$paramIndex];
+            }
+            $paramIndex++;
+            return ':' . $paramName;
+        }, $where);
+        
+        $sql = "UPDATE {$table} SET " . implode(', ', $set) . " WHERE {$whereConverted}";
+        return $this->query($sql, array_merge($data, $whereNamedParams));
     }
     
     public function delete($table, $where, $params = []) {
-        $sql = "DELETE FROM {$table} WHERE {$where}";
-        return $this->query($sql, $params);
+        // 转换WHERE条件中的位置参数为命名参数
+        $whereNamedParams = [];
+        $paramIndex = 0;
+        $whereConverted = preg_replace_callback('/\?/', function() use (&$paramIndex, $params, &$whereNamedParams) {
+            $paramName = 'param_' . $paramIndex;
+            if (isset($params[$paramIndex])) {
+                $whereNamedParams[$paramName] = $params[$paramIndex];
+            }
+            $paramIndex++;
+            return ':' . $paramName;
+        }, $where);
+        
+        $sql = "DELETE FROM {$table} WHERE {$whereConverted}";
+        return $this->query($sql, $whereNamedParams);
     }
     
     public function count($table, $where = '1=1', $params = []) {
-        $sql = "SELECT COUNT(*) as count FROM {$table} WHERE {$where}";
-        $result = $this->fetch($sql, $params);
+        // 转换WHERE条件中的位置参数为命名参数
+        $whereNamedParams = [];
+        $paramIndex = 0;
+        $whereConverted = preg_replace_callback('/\?/', function() use (&$paramIndex, $params, &$whereNamedParams) {
+            $paramName = 'param_' . $paramIndex;
+            if (isset($params[$paramIndex])) {
+                $whereNamedParams[$paramName] = $params[$paramIndex];
+            }
+            $paramIndex++;
+            return ':' . $paramName;
+        }, $where);
+        
+        $sql = "SELECT COUNT(*) as count FROM {$table} WHERE {$whereConverted}";
+        $result = $this->fetch($sql, $whereNamedParams);
         return $result['count'];
     }
 }

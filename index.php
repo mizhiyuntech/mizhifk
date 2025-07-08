@@ -83,261 +83,143 @@ if ($_POST) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo e($siteTitle); ?></title>
     <link rel="stylesheet" href="layui/css/layui.css">
-    <style>
-        body { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        .main-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .header-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-        .header-section h1 {
-            margin: 0 0 10px;
-            font-size: 2.5em;
-            font-weight: 300;
-        }
-        .header-section p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
-        .form-section {
-            padding: 40px 30px;
-        }
-        .form-group {
-            margin-bottom: 25px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-            font-size: 14px;
-        }
-        .required {
-            color: #ff5722;
-        }
-        .layui-input, .layui-select, .layui-textarea {
-            border-radius: 8px;
-            border: 2px solid #e8e8e8;
-            transition: all 0.3s ease;
-        }
-        .layui-input:focus, .layui-select:focus, .layui-textarea:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        .layui-textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        .priority-options {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .priority-option {
-            flex: 1;
-            min-width: 120px;
-        }
-        .submit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 25px;
-            padding: 15px 40px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: transform 0.3s ease;
-        }
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-        .admin-link {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 12px;
-            transition: background 0.3s ease;
-        }
-        .admin-link:hover {
-            background: rgba(0,0,0,0.9);
-            color: white;
-        }
-        
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            body { padding: 10px 0; }
-            .container { padding: 0 10px; }
-            .header-section {
-                padding: 30px 20px;
-            }
-            .header-section h1 {
-                font-size: 2em;
-            }
-            .form-section {
-                padding: 30px 20px;
-            }
-            .priority-options {
-                flex-direction: column;
-            }
-            .priority-option {
-                min-width: auto;
-            }
-            .admin-link {
-                bottom: 10px;
-                right: 10px;
-                font-size: 11px;
-                padding: 8px 12px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header-section h1 {
-                font-size: 1.8em;
-            }
-            .header-section p {
-                font-size: 1em;
-            }
-            .form-section {
-                padding: 20px 15px;
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="main-card">
-            <div class="header-section">
-                <h1><?php echo e($siteTitle); ?></h1>
-                <p><?php echo e($siteDescription); ?></p>
-            </div>
-            
-            <div class="form-section">
-                <?php if ($error): ?>
-                <div class="layui-elem-quote layui-quote-nm" style="border-left: 5px solid #ff5722; color: #ff5722; margin-bottom: 25px;">
-                    <i class="layui-icon layui-icon-close"></i> <?php echo e($error); ?>
-                </div>
-                <?php endif; ?>
-                
-                <?php if ($success): ?>
-                <div class="layui-elem-quote layui-quote-nm" style="border-left: 5px solid #5fb878; color: #5fb878; margin-bottom: 25px;">
-                    <i class="layui-icon layui-icon-ok"></i> <?php echo e($success); ?>
-                </div>
-                <?php endif; ?>
-                
-                <form class="layui-form" method="post">
-                    <input type="hidden" name="_token" value="<?php echo generateCsrfToken(); ?>">
-                    
-                    <div class="layui-row layui-col-space15">
-                        <div class="layui-col-md12">
-                            <div class="form-group">
-                                <label>需求分类 <span class="required">*</span></label>
-                                <select name="category_id" class="layui-input" lay-verify="required">
-                                    <option value="">请选择需求分类</option>
-                                    <?php foreach ($categories as $category): ?>
-                                    <option value="<?php echo $category['id']; ?>" 
-                                        <?php echo (isset($_POST['category_id']) && $_POST['category_id'] == $category['id']) ? 'selected' : ''; ?>>
-                                        <?php echo e($category['name']); ?>
-                                    </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
+    <div class="layui-container" style="margin-top: 30px;">
+        <div class="layui-row">
+            <div class="layui-col-md8 layui-col-md-offset2">
+                <!-- 页面头部 -->
+                <div class="layui-card">
+                    <div class="layui-card-header" style="text-align: center; background: linear-gradient(135deg, #1e9fff 0%, #5fb878 100%); color: white;">
+                        <h1 style="margin: 20px 0; font-size: 28px;"><?php echo e($siteTitle); ?></h1>
+                        <p style="margin: 0 0 20px; font-size: 16px; opacity: 0.9;"><?php echo e($siteDescription); ?></p>
                     </div>
                     
-                    <div class="form-group">
-                        <label>需求标题 <span class="required">*</span></label>
-                        <input type="text" name="title" value="<?php echo e($_POST['title'] ?? ''); ?>" 
-                               placeholder="请简要描述您的需求" class="layui-input" lay-verify="required">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>需求描述 <span class="required">*</span></label>
-                        <textarea name="description" placeholder="请详细描述您的需求，包括具体的功能要求、使用场景等" 
-                                  class="layui-textarea" lay-verify="required"><?php echo e($_POST['description'] ?? ''); ?></textarea>
-                    </div>
-                    
-                    <div class="layui-row layui-col-space15">
-                        <div class="layui-col-md6">
-                            <div class="form-group">
-                                <label>联系人姓名</label>
-                                <input type="text" name="contact_name" value="<?php echo e($_POST['contact_name'] ?? ''); ?>" 
-                                       placeholder="您的姓名" class="layui-input">
-                            </div>
+                    <div class="layui-card-body">
+                        <?php if ($error): ?>
+                        <div class="layui-elem-quote layui-quote-nm" style="border-left: 5px solid #ff5722; color: #ff5722;">
+                            <i class="layui-icon layui-icon-close"></i> <?php echo e($error); ?>
                         </div>
-                        <div class="layui-col-md6">
-                            <div class="form-group">
-                                <label>联系邮箱</label>
-                                <input type="email" name="contact_email" value="<?php echo e($_POST['contact_email'] ?? ''); ?>" 
-                                       placeholder="您的邮箱地址" class="layui-input">
-                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($success): ?>
+                        <div class="layui-elem-quote layui-quote-nm" style="border-left: 5px solid #5fb878; color: #5fb878;">
+                            <i class="layui-icon layui-icon-ok"></i> <?php echo e($success); ?>
                         </div>
-                    </div>
-                    
-                    <div class="layui-row layui-col-space15">
-                        <div class="layui-col-md6">
-                            <div class="form-group">
-                                <label>联系电话</label>
-                                <input type="tel" name="contact_phone" value="<?php echo e($_POST['contact_phone'] ?? ''); ?>" 
-                                       placeholder="您的手机号码" class="layui-input">
+                        <?php endif; ?>
+                        
+                        <form class="layui-form" method="post" lay-filter="requirementForm">
+                            <input type="hidden" name="_token" value="<?php echo generateCsrfToken(); ?>">
+                            
+                            <!-- 需求分类 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">需求分类<span style="color: #ff5722;">*</span></label>
+                                <div class="layui-input-block">
+                                    <select name="category_id" lay-verify="required" lay-search="">
+                                        <option value="">请选择需求分类</option>
+                                        <?php foreach ($categories as $category): ?>
+                                        <option value="<?php echo $category['id']; ?>" 
+                                            <?php echo (isset($_POST['category_id']) && $_POST['category_id'] == $category['id']) ? 'selected' : ''; ?>>
+                                            <?php echo e($category['name']); ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="layui-col-md6">
-                            <div class="form-group">
-                                <label>优先级</label>
-                                <div class="priority-options">
-                                    <div class="priority-option">
-                                        <input type="radio" name="priority" value="low" title="低优先级" 
-                                               <?php echo (($_POST['priority'] ?? 'medium') == 'low') ? 'checked' : ''; ?>>
+                            
+                            <!-- 需求标题 -->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">需求标题<span style="color: #ff5722;">*</span></label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="title" value="<?php echo e($_POST['title'] ?? ''); ?>" 
+                                           placeholder="请简要描述您的需求" class="layui-input" lay-verify="title">
+                                </div>
+                            </div>
+                            
+                            <!-- 需求描述 -->
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">需求描述<span style="color: #ff5722;">*</span></label>
+                                <div class="layui-input-block">
+                                    <textarea name="description" placeholder="请详细描述您的需求，包括具体的功能要求、使用场景等" 
+                                              class="layui-textarea" lay-verify="description" style="min-height: 120px;"><?php echo e($_POST['description'] ?? ''); ?></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- 联系信息 -->
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">联系人姓名</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="contact_name" value="<?php echo e($_POST['contact_name'] ?? ''); ?>" 
+                                                   placeholder="您的姓名" class="layui-input">
+                                        </div>
                                     </div>
-                                    <div class="priority-option">
-                                        <input type="radio" name="priority" value="medium" title="中优先级" 
-                                               <?php echo (($_POST['priority'] ?? 'medium') == 'medium') ? 'checked' : ''; ?>>
-                                    </div>
-                                    <div class="priority-option">
-                                        <input type="radio" name="priority" value="high" title="高优先级" 
-                                               <?php echo (($_POST['priority'] ?? 'medium') == 'high') ? 'checked' : ''; ?>>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">联系邮箱</label>
+                                        <div class="layui-input-block">
+                                            <input type="email" name="contact_email" value="<?php echo e($_POST['contact_email'] ?? ''); ?>" 
+                                                   placeholder="您的邮箱地址" class="layui-input" lay-verify="contact_email">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">联系电话</label>
+                                        <div class="layui-input-block">
+                                            <input type="tel" name="contact_phone" value="<?php echo e($_POST['contact_phone'] ?? ''); ?>" 
+                                                   placeholder="您的手机号码" class="layui-input" lay-verify="contact_phone">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">优先级</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="priority" value="low" title="低优先级" 
+                                                   <?php echo (($_POST['priority'] ?? 'medium') == 'low') ? 'checked' : ''; ?>>
+                                            <input type="radio" name="priority" value="medium" title="中优先级" 
+                                                   <?php echo (($_POST['priority'] ?? 'medium') == 'medium') ? 'checked' : ''; ?>>
+                                            <input type="radio" name="priority" value="high" title="高优先级" 
+                                                   <?php echo (($_POST['priority'] ?? 'medium') == 'high') ? 'checked' : ''; ?>>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 提交按钮 -->
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn layui-btn-fluid layui-btn-lg" lay-submit lay-filter="submit">
+                                        <i class="layui-icon layui-icon-release"></i> 提交需求
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    
-                    <div class="form-group" style="margin-top: 40px;">
-                        <button type="submit" class="layui-btn layui-btn-fluid submit-btn">
-                            <i class="layui-icon layui-icon-release"></i> 提交需求
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
+        </div>
+        
+        <!-- 移动端适配的管理后台链接 -->
+        <div class="layui-hide-md layui-show-xs-inline-block" style="text-align: center; margin-top: 20px;">
+            <a href="admin/login.php" class="layui-btn layui-btn-primary layui-btn-sm">
+                <i class="layui-icon layui-icon-username"></i> 管理后台
+            </a>
         </div>
     </div>
     
-    <a href="admin/login.php" class="admin-link">
-        <i class="layui-icon layui-icon-username"></i> 管理后台
-    </a>
+    <!-- 桌面端管理后台链接 -->
+    <div class="layui-hide-xs" style="position: fixed; bottom: 20px; right: 20px;">
+        <a href="admin/login.php" class="layui-btn layui-btn-primary layui-btn-sm">
+            <i class="layui-icon layui-icon-username"></i> 管理后台
+        </a>
+    </div>
     
     <script src="layui/layui.js"></script>
     <script>
@@ -382,7 +264,7 @@ if ($_POST) {
         });
         
         // 表单提交
-        form.on('submit()', function(data){
+        form.on('submit(submit)', function(data){
             var index = layer.load(2, {shade: 0.3});
             return true; // 允许表单提交
         });

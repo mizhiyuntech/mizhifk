@@ -87,6 +87,16 @@ if (!$requirement) {
             body { padding: 15px; }
             .detail-label { font-size: 13px; }
             .detail-value { font-size: 13px; }
+            .status-badge, .priority-badge {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .detail-section { margin-bottom: 20px; }
+            .meta-info { padding: 10px; }
+            .meta-item { font-size: 12px; }
         }
     </style>
 </head>

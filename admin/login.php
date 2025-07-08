@@ -56,140 +56,69 @@ if ($_POST) {
     <link rel="stylesheet" href="../layui/css/layui.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e9fff 0%, #5fb878 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .login-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            padding: 0;
-            overflow: hidden;
-            width: 100%;
-            max-width: 400px;
-        }
-        .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .login-header h1 {
-            margin: 0 0 10px;
-            font-size: 1.8em;
-            font-weight: 300;
-        }
-        .login-header p {
-            margin: 0;
-            opacity: 0.9;
-        }
-        .login-body {
-            padding: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        .layui-input {
-            border-radius: 8px;
-            border: 2px solid #e8e8e8;
-            transition: all 0.3s ease;
-            padding: 12px 15px;
-        }
-        .layui-input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        .login-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: transform 0.3s ease;
-        }
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-        .back-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .back-link a {
-            color: #999;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .back-link a:hover {
-            color: #667eea;
+            padding: 20px 0;
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
             body { padding: 10px; }
-            .login-header {
-                padding: 20px;
-            }
-            .login-header h1 {
-                font-size: 1.5em;
-            }
-            .login-body {
-                padding: 20px;
-            }
+            .layui-container { margin-top: 20px !important; }
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>管理后台</h1>
-            <p>请登录您的管理员账号</p>
-        </div>
-        
-        <div class="login-body">
-            <?php if ($error): ?>
-            <div class="layui-elem-quote layui-quote-nm" style="border-left: 5px solid #ff5722; color: #ff5722; margin-bottom: 20px;">
-                <i class="layui-icon layui-icon-close"></i> <?php echo e($error); ?>
-            </div>
-            <?php endif; ?>
-            
-            <form class="layui-form" method="post">
-                <input type="hidden" name="_token" value="<?php echo generateCsrfToken(); ?>">
-                
-                <div class="form-group">
-                    <label>用户名</label>
-                    <input type="text" name="username" value="<?php echo e($_POST['username'] ?? ''); ?>" 
-                           placeholder="请输入用户名" class="layui-input" lay-verify="required" autofocus>
+  <body>
+    <div class="layui-container" style="margin-top: 80px;">
+        <div class="layui-row">
+            <div class="layui-col-md6 layui-col-md-offset3 layui-col-sm8 layui-col-sm-offset2">
+                <div class="layui-card">
+                    <div class="layui-card-header" style="text-align: center; background: linear-gradient(135deg, #1e9fff 0%, #5fb878 100%); color: white;">
+                        <h1 style="margin: 20px 0; font-size: 24px;">管理后台</h1>
+                        <p style="margin: 0 0 20px; opacity: 0.9;">请登录您的管理员账号</p>
+                    </div>
+                    
+                    <div class="layui-card-body" style="padding: 30px;">
+                        <?php if ($error): ?>
+                        <div class="layui-elem-quote layui-quote-nm" style="border-left: 5px solid #ff5722; color: #ff5722;">
+                            <i class="layui-icon layui-icon-close"></i> <?php echo e($error); ?>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <form class="layui-form" method="post">
+                            <input type="hidden" name="_token" value="<?php echo generateCsrfToken(); ?>">
+                            
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="username" value="<?php echo e($_POST['username'] ?? ''); ?>" 
+                                           placeholder="请输入用户名" class="layui-input" lay-verify="required" autofocus>
+                                </div>
+                            </div>
+                            
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">密码</label>
+                                <div class="layui-input-block">
+                                    <input type="password" name="password" 
+                                           placeholder="请输入密码" class="layui-input" lay-verify="required">
+                                </div>
+                            </div>
+                            
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn layui-btn-fluid layui-btn-lg">
+                                        <i class="layui-icon layui-icon-username"></i> 登录
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="../index.php" class="layui-btn layui-btn-primary layui-btn-sm">
+                                <i class="layui-icon layui-icon-return"></i> 返回首页
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>密码</label>
-                    <input type="password" name="password" 
-                           placeholder="请输入密码" class="layui-input" lay-verify="required">
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" class="layui-btn layui-btn-fluid login-btn">
-                        <i class="layui-icon layui-icon-username"></i> 登录
-                    </button>
-                </div>
-            </form>
-            
-            <div class="back-link">
-                <a href="../index.php">
-                    <i class="layui-icon layui-icon-return"></i> 返回首页
-                </a>
             </div>
         </div>
     </div>
