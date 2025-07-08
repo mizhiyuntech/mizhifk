@@ -155,8 +155,28 @@ $siteTitle = getSetting('site_title', '需求收集系统');
         }
         
         @media (max-width: 768px) {
+            .layui-body { padding: 10px !important; }
+            .content-card { padding: 15px; }
             .layui-table { font-size: 12px; }
-            .requirement-description { max-width: 150px; }
+            .requirement-description { max-width: 120px; }
+            .search-bar .layui-inline { 
+                display: block; 
+                margin-bottom: 10px; 
+                width: 100%;
+            }
+            .search-bar .layui-input,
+            .search-bar .layui-btn { 
+                width: 100%; 
+            }
+        }
+        @media (max-width: 480px) {
+            .layui-table thead th:nth-child(3),
+            .layui-table tbody td:nth-child(3),
+            .layui-table thead th:nth-child(4),
+            .layui-table tbody td:nth-child(4) {
+                display: none;
+            }
+            .requirement-description { max-width: 80px; }
         }
     </style>
 </head>
@@ -401,28 +421,47 @@ $siteTitle = getSetting('site_title', '需求收集系统');
     // 更新状态
     function updateStatus(id, currentStatus) {
         var statusOptions = [
-            {value: 'pending', text: '待处理'},
-            {value: 'processing', text: '处理中'},
-            {value: 'completed', text: '已完成'},
-            {value: 'rejected', text: '已拒绝'}
+            {value: 'pending', text: '待处理', color: '#ff9800'},
+            {value: 'processing', text: '处理中', color: '#1e9fff'},
+            {value: 'completed', text: '已完成', color: '#5fb878'},
+            {value: 'rejected', text: '已拒绝', color: '#ff5722'}
         ];
         
-        var html = '<div style="padding: 20px;"><select id="statusSelect" class="layui-input">';
+        var html = '<div style="padding: 20px;">' +
+                  '<form class="layui-form" lay-filter="statusForm">' +
+                  '<div class="layui-form-item">' +
+                  '<label class="layui-form-label">状态</label>' +
+                  '<div class="layui-input-block">' +
+                  '<select name="status" lay-verify="required" lay-filter="statusSelect">';
+        
         statusOptions.forEach(function(option) {
-            html += '<option value="' + option.value + '"' + (option.value === currentStatus ? ' selected' : '') + '>' + option.text + '</option>';
+            html += '<option value="' + option.value + '"' + 
+                   (option.value === currentStatus ? ' selected' : '') + 
+                   '>' + option.text + '</option>';
         });
-        html += '</select></div>';
+        
+        html += '</select></div></div></form></div>';
         
         layer.open({
+            type: 1,
             title: '更新状态',
             content: html,
+            area: ['400px', '250px'],
             btn: ['确定', '取消'],
+            success: function(layero, index) {
+                // 重新渲染表单
+                layui.form.render('select', 'statusForm');
+            },
             yes: function(index) {
-                var newStatus = document.getElementById('statusSelect').value;
-                document.getElementById('hiddenAction').value = 'update_status';
-                document.getElementById('hiddenId').value = id;
-                document.getElementById('hiddenStatus').value = newStatus;
-                document.getElementById('hiddenForm').submit();
+                var newStatus = layero.find('select[name="status"]').val();
+                if (newStatus !== currentStatus) {
+                    document.getElementById('hiddenAction').value = 'update_status';
+                    document.getElementById('hiddenId').value = id;
+                    document.getElementById('hiddenStatus').value = newStatus;
+                    document.getElementById('hiddenForm').submit();
+                } else {
+                    layer.close(index);
+                }
             }
         });
     }
