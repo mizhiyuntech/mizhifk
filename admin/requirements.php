@@ -18,7 +18,7 @@ if ($_POST) {
             case 'update_status':
                 $id = (int)$_POST['id'];
                 $status = $_POST['status'];
-                if (in_array($status, ['pending', 'processing', 'completed', 'rejected'])) {
+                if (in_array($status, ['pending', 'processing', 'processed', 'completed', 'rejected'])) {
                     $db->update('requirements', ['status' => $status], 'id = ?', [$id]);
                     $message = '状态更新成功';
                     $messageType = 'success';
@@ -244,6 +244,7 @@ $siteTitle = getSetting('site_title', '需求收集系统');
                                     <option value="">全部状态</option>
                                     <option value="pending" <?php echo $statusFilter === 'pending' ? 'selected' : ''; ?>>待处理</option>
                                     <option value="processing" <?php echo $statusFilter === 'processing' ? 'selected' : ''; ?>>处理中</option>
+                                    <option value="processed" <?php echo $statusFilter === 'processed' ? 'selected' : ''; ?>>已处理</option>
                                     <option value="completed" <?php echo $statusFilter === 'completed' ? 'selected' : ''; ?>>已完成</option>
                                     <option value="rejected" <?php echo $statusFilter === 'rejected' ? 'selected' : ''; ?>>已拒绝</option>
                                 </select>
@@ -423,6 +424,7 @@ $siteTitle = getSetting('site_title', '需求收集系统');
         var statusOptions = [
             {value: 'pending', text: '待处理', color: '#ff9800'},
             {value: 'processing', text: '处理中', color: '#1e9fff'},
+            {value: 'processed', text: '已处理', color: '#009688'},
             {value: 'completed', text: '已完成', color: '#5fb878'},
             {value: 'rejected', text: '已拒绝', color: '#ff5722'}
         ];
