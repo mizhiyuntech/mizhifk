@@ -111,6 +111,7 @@ function getStatusText($status) {
     $statusMap = [
         'pending' => '待处理',
         'processing' => '处理中',
+        'processed' => '已处理',
         'completed' => '已完成',
         'rejected' => '已拒绝'
     ];
@@ -132,6 +133,7 @@ function getStatusColor($status) {
     $colorMap = [
         'pending' => '#ffb800',
         'processing' => '#1e9fff',
+        'processed' => '#009688',
         'completed' => '#5fb878',
         'rejected' => '#ff5722'
     ];

@@ -205,20 +205,6 @@ if ($_POST) {
                 </div>
             </div>
         </div>
-        
-        <!-- 移动端适配的管理后台链接 -->
-        <div class="layui-hide-md layui-show-xs-inline-block" style="text-align: center; margin-top: 20px;">
-            <a href="admin/login.php" class="layui-btn layui-btn-primary layui-btn-sm">
-                <i class="layui-icon layui-icon-username"></i> 管理后台
-            </a>
-        </div>
-    </div>
-    
-    <!-- 桌面端管理后台链接 -->
-    <div class="layui-hide-xs" style="position: fixed; bottom: 20px; right: 20px;">
-        <a href="admin/login.php" class="layui-btn layui-btn-primary layui-btn-sm">
-            <i class="layui-icon layui-icon-username"></i> 管理后台
-        </a>
     </div>
     
     <script src="layui/layui.js"></script>
